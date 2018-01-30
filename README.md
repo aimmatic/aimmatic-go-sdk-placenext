@@ -1,11 +1,11 @@
-### Placenext SDK ###
+### placeNext SDK ###
 
-Pleasenext SDK a library that help developer to quick deploy an application
+placeNext SDK a library that help developer to quick deploy an application
 that connected to Placenext Rest API.
 
 ### Usage ###
 
-The SDK is required api key and secret key to establish connection to PlaceNext Api.
+The SDK is required api key and secret key to establish connection to placeNext Api.
 There are 2 way to setup api key and secret key.
 
 1. Using variable environment PLACENEXT_APIKEY and PLACENEXT_SECRETKEY
