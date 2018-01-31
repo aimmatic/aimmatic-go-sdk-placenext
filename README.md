@@ -1,25 +1,26 @@
+AimMatic SDKs are easiest and best supported way for most developers to use AimMatic APIs.
+
 ### placeNext SDK ###
 
-placeNext SDK a library that help developer to quick deploy an application
-that connected to Placenext Rest API.
+placeNext SDK is a client library to help developers quickly deploy applications with programmatic connections to placeNext Rest APIs.
 
-### Usage ###
+### Paired Key Connections ###
 
-The SDK is required api key and secret key to establish connection to placeNext Api.
-There are 2 way to setup api key and secret key.
+This SDK requires an API Key and Secret Key to establish a secure connection to placeNext.
+There are two ways to set-up your application's API Key and Secret Key.
 
-1. Using variable environment PLACENEXT_APIKEY and PLACENEXT_SECRETKEY
+1. Use a variable environment PLACENEXT_APIKEY and PLACENEXT_SECRETKEY
 
-2. Using the below code in your application
-
-**Using variable environment**
+**Using a variable environment**
 
 ```go
 restApi := core.NewRespApi(rest.DefaultClient())
 restApi.V1().IngestGeometry(....)
 ```
 
-**Setup ApiKey and SecretKey at runtime Globally**
+2. Use the below code in your application
+
+**Setup ApiKey and SecretKey for runtime Globally**
 
 ```go
 config, err := rest.NewConfig("Your Api Key", "Your Secret Key")
