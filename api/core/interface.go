@@ -15,39 +15,29 @@ limitations under the License.
 package core
 
 import (
-    "github.com/aimmatic/aimmatic-go-sdk-placenext/api/core/v1"
     "github.com/aimmatic/aimmatic-go-sdk-placenext/rest"
-    "sync"
+    "github.com/aimmatic/aimmatic-go-sdk-placenext/api/core/v1"
 )
 
 // RestApi holding all api and api version
 type RestApi interface {
-    V1() v1.PlaceNext
+    V1() v1.CoreV1
 }
 
 type restApiImpl struct {
     client *rest.Client
-    mu     sync.RWMutex
-    api    map[uint8]interface{}
+    v1     v1.CoreV1
 }
 
-// NewRespApi return a RestApi
-func NewRespApi(client *rest.Client) RestApi {
-    return &restApiImpl{client: client, api: make(map[uint8]interface{})}
+// NewRestApi return a RestApi
+func NewRestApi(client *rest.Client) RestApi {
+    return &restApiImpl{
+        client: client,
+        v1:     v1.NewCoreV1(client),
+    }
 }
 
 // V1 return a placenext api interface to access placenext api
-func (r *restApiImpl) V1() (placenext v1.PlaceNext) {
-    r.mu.Lock()
-    defer r.mu.Unlock()
-    if r.api[1] != nil {
-        var ok bool
-        if placenext, ok = r.api[1].(v1.PlaceNext); !ok {
-            panic("error v1 api instance is not a placenext api")
-        }
-    } else {
-        placenext = v1.NewPlaceNext(r.client)
-        r.api[1] = placenext
-    }
-    return
+func (r *restApiImpl) V1() (v1.CoreV1) {
+    return r.v1
 }

@@ -36,7 +36,7 @@ const (
 const (
     domain       = "api.aimmatic.com"
     scheme       = "https"
-    defaultAgent = "placenext 1.0"
+    defaultAgent = "aimmatic 1.0"
 )
 
 // required http header to be include in rest api request
@@ -45,11 +45,13 @@ const (
     ContentType     = "Content-Type"
     ContentMD5      = "Content-MD5"
     Date            = "Date"
+    UserAgent       = "User-Agent"
     XPlacenextDate  = "X-PlaceNext-Date"
     XForwardedProto = "X-Forwarded-Proto"
 )
 
 // Media content type
 const (
-    MediaJson = "application/json; charset=utf-8"
+    MediaJson    = "application/json; charset=utf-8"
+    MediaGeoJson = "application/geo+json"
 )

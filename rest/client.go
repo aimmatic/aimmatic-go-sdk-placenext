@@ -77,6 +77,8 @@ func (c *Client) Config() Config {
 
 // add custom header and api authorization
 func addHeader(r *http.Request, config Config) error {
+    // user agent
+    r.Header.Set(UserAgent, defaultAgent)
     // add date
     date := time.Now().UTC().Format(time.RFC1123)
     r.Header.Set(Date, date)

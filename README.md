@@ -4,27 +4,37 @@ AimMatic SDKs are easiest and best supported way for most developers to use AimM
 
 placeNext SDK is a client library to help developers quickly deploy applications with programmatic connections to placeNext Rest APIs.
 
-### Paired Key Connections ###
+### Getting Started ###
+
+```
+go get github.com/aimmatic/aimmatic-go-sdk-placenext
+```
+
+If you're using dep as dependency management
+
+```
+dep ensure -add github.com/aimmatic/aimmatic-go-sdk-placenext
+```
+
+#### Paired Key Connections ####
 
 This SDK requires an API Key and Secret Key to establish a secure connection to placeNext.
-There are two ways to set-up your application's API Key and Secret Key.
-
-1. Use a variable environment PLACENEXT_APIKEY and PLACENEXT_SECRETKEY
+To set-up your application's API Key and Secret Key.
 
 **Using a variable environment**
 
+Set the variable environment PLACENEXT_APIKEY and PLACENEXT_SECRETKEY then
+create core rest api to access with our api.
+
 ```go
-restApi := core.NewRespApi(rest.DefaultClient())
-restApi.V1().IngestGeometry(....)
+restApi := core.NewRestApi(rest.DefaultClient())
+restApi.V1().GetNSS()
 ```
 
-2. Use the below code in your application
-
-**Setup ApiKey and SecretKey for runtime Globally**
+**Setup ApiKey and SecretKey at runtime**
 
 ```go
-config, err := rest.NewConfig("Your Api Key", "Your Secret Key")
-rest.SetConfig(config)
-restApi := core.NewRespApi(rest.DefaultClient())
-restApi.V1().IngestGeometry(...)
+config, _ := rest.NewConfig("Your Api Key", "Your Secret Key")
+restApi := core.NewRestApi(rest.NewRestClient(config))
+restApi.V1().GetNSS()
 ```

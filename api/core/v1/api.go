@@ -14,27 +14,44 @@ limitations under the License.
 // Package v1 provides api version 1 access to placenext api
 package v1
 
-import "github.com/aimmatic/aimmatic-go-sdk-placenext/rest"
+import (
+    "github.com/aimmatic/aimmatic-go-sdk-placenext/rest"
+    "time"
+)
 
-type Response struct {
+type Status struct {
     Code      int    `json:"code"`
     Message   string `json:"message"`
     RequestId string `json:"requestId"`
 }
 
-const apiVersion = "/v1"
-
-// Interface provides access to all api of placenext version 1
-type PlaceNext interface {
-    IngestLocationMeasurement([]LocationMeasurement) (*Response, error)
-    IngestGeometry(data []*Geometry) (*Response, error)
+type Response struct {
+    Status *Status `json:"status"`
 }
 
-type placeNextImpl struct {
+const apiVersion = "/v1"
+
+// CoreV1 provides access to all api of aimmatic service
+type CoreV1 interface {
+    placeNext
+    insights
+}
+
+type placeNext interface {
+    PointImport([]*PointJSON) (*Response, error)
+    GeometryImport(*GeometryCollection) (*Response, error)
+}
+
+type insights interface {
+    GetNSS() (*NSSResponse, error)
+    GetNSSByRange(start, end time.Time) (*NSSResponse, error)
+}
+
+type coreV1 struct {
     client *rest.Client
 }
 
-// NewPlaceNext returns a new PlaceNext.
-func NewPlaceNext(client *rest.Client) PlaceNext {
-    return &placeNextImpl{client: client}
+// NewCoreV1 returns a new CoreV1 object.
+func NewCoreV1(client *rest.Client) CoreV1 {
+    return &coreV1{client: client}
 }
