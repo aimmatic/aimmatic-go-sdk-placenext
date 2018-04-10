@@ -83,14 +83,14 @@ func addHeader(r *http.Request, config Config) error {
     date := time.Now().UTC().Format(time.RFC1123)
     r.Header.Set(Date, date)
     r.Header.Set(XPlacenextDate, date)
-    // TODO: remove content type of body is not available
-    r.Header.Set(ContentType, MediaJson)
     // calculate signature
     _, _, signatureHashB64, md5hash, err := ComputeSignature(r, config.GetSecretKey())
     if err != nil {
         return err
     }
-    r.Header.Set(ContentMD5, md5hash)
+    if md5hash != "" {
+        r.Header.Set(ContentMD5, md5hash)
+    }
     r.Header.Set(Authorization, fmt.Sprintf("AimMatic %s:%s", config.GetApiKey(), signatureHashB64))
     return nil
 }

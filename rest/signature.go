@@ -89,15 +89,15 @@ func GetSecretKeyAsByte(secret string) (secretByte []byte, err error) {
 // if the content body is empty then the md5 of empty byte array will return
 func ComputeBodyMd5Base64(r *http.Request) ([]byte) {
     // calculate body md5
-    var b []byte
     if r.ContentLength > 0 {
         var buf bytes.Buffer
         buf.ReadFrom(r.Body)
         r.Body = ioutil.NopCloser(&buf)
-        b = buf.Bytes()
+        bmd5 := md5.Sum(buf.Bytes())
+        return bmd5[:]
+    } else {
+        return nil
     }
-    bmd5 := md5.Sum(b)
-    return bmd5[:]
 }
 
 // ComputeSignature calculate hash result from the given request based on the secret key
@@ -106,27 +106,28 @@ func ComputeSignature(r *http.Request, secret []byte) (signature, contentMD5 []b
     // calculate body md5
     buf := bytes.NewBuffer(nil)
     contentMD5 = ComputeBodyMd5Base64(r)
-    contentMD5B64 = base64.RawStdEncoding.EncodeToString(contentMD5)
-    // write content md5
-    buf.WriteString(contentMD5B64)
-    buf.WriteByte('\n')
-    // write content type
-    if r.Header.Get("Content-Type") == "" {
-        err = ErrMissingContentType
-        return
+    if contentMD5 != nil {
+        contentMD5B64 = base64.RawStdEncoding.EncodeToString(contentMD5)
+        // write content md5
+        buf.WriteString(contentMD5B64)
+        buf.WriteByte('\n')
     }
-    buf.WriteString(r.Header.Get("Content-Type"))
-    buf.WriteByte('\n')
+    // write content type
+    if r.Header.Get("Content-Type") != "" {
+        buf.WriteString(r.Header.Get("Content-Type"))
+        buf.WriteByte('\n')
+    }
     // write date
     if r.Header.Get("X-Placenext-Date") != "" {
         buf.WriteString(r.Header.Get("X-Placenext-Date"))
+        buf.WriteByte('\n')
     } else if r.Header.Get("Date") != "" {
         buf.WriteString(r.Header.Get("Date"))
+        buf.WriteByte('\n')
     } else {
         err = ErrMissingDate
         return
     }
-    buf.WriteByte('\n')
     // write header concat
     buf.WriteString(concatenateHeader(r))
     buf.WriteByte('\n')
